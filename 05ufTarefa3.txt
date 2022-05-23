@@ -1,0 +1,114 @@
+{ ==============================================================================}
+{  */ VIEW UNIT Tela Tarefa 03                                                  }
+{ ==============================================================================}
+{ Deselvolvedor:Carlos Alexandre de Oliveira Fraga                              }
+{ e-Mail:cfraga03@yahoo.com.br                                                  }
+{ Telefone :021 994463083                                                       }
+{ ==============================================================================}
+
+
+
+
+unit ufTarefa3;
+
+interface
+
+uses
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.ExtCtrls, Data.DB, Vcl.Grids,
+  Vcl.DBGrids, Vcl.StdCtrls, System.ImageList, Vcl.ImgList , Datasnap.DBClient;
+
+type
+  TfTarefa3 = class(TForm)
+    Panel1: TPanel;
+    DBGridFtTarefa03: TDBGrid;
+    LabelFtObterTotal: TLabel;
+    EditFtObterTotal: TEdit;
+    Label1: TLabel;
+    EditFtTotalDivisoes: TEdit;
+    ButtonFtObterTotal: TButton;
+    ButtonFtObterTotalDivisaoes: TButton;
+    ImageListFtTarefa03: TImageList;
+    procedure FormClose(Sender: TObject; var Action: TCloseAction);
+    procedure FormShow(Sender: TObject);
+    procedure ButtonFtObterTotalClick(Sender: TObject);
+    procedure ButtonFtObterTotalDivisaoesClick(Sender: TObject);
+    procedure s(Sender: TObject; var Key: Char);
+  private
+    { Private declarations }
+  public
+    { Public declarations }
+  end;
+
+var
+  fTarefa3: TfTarefa3;
+
+
+implementation
+
+{$R *.dfm}
+Uses uProvaDelphiApp , uCriarConexaoDados , uModelViewfTarefa03;
+
+
+
+{==============================================================================}
+procedure TfTarefa3.ButtonFtObterTotalClick(Sender: TObject);
+begin
+
+  {Obter Soma Total}
+  EditFtObterTotal.Text := '';
+  EditFtObterTotal.Text := Trim( fObterTotal );
+
+end;
+{==============================================================================}
+
+
+
+
+{==============================================================================}
+procedure TfTarefa3.ButtonFtObterTotalDivisaoesClick(Sender: TObject);
+begin
+
+ {Obter Soma Total da divisão}
+ EditFtTotalDivisoes.Text := fObterTotalDivisao ;
+
+end;
+procedure TfTarefa3.s(Sender: TObject; var Key: Char);
+begin
+
+
+
+end;
+
+{==============================================================================}
+
+
+
+
+
+{==============================================================================}
+procedure TfTarefa3.FormClose(Sender: TObject; var Action: TCloseAction);
+begin
+ {Liberar memória}
+ pDestroiClientDataSetDataSource;
+ Action := caFree;
+
+
+end;
+{==============================================================================}
+
+
+
+{==============================================================================}
+procedure TfTarefa3.FormShow(Sender: TObject);
+begin
+
+  pCriarClientDataSetDataSource;
+  EditFtObterTotal.Text    :='';
+  EditFtTotalDivisoes.Text :='';
+
+end;
+{==============================================================================}
+
+
+end.

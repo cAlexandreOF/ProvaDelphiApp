@@ -1,0 +1,124 @@
+{ ==============================================================================}
+{  */ MODEL UNIT Tela Tarefa 02                                                 }
+{ ==============================================================================}
+{ Deselvolvedor:Carlos Alexandre de Oliveira Fraga                              }
+{ e-Mail:cfraga03@yahoo.com.br                                                  }
+{ Telefone :021 994463083                                                       }
+{ ==============================================================================}
+
+
+
+
+unit uModelViewfTarefa02;
+
+interface
+
+uses
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls,
+  Vcl.ComCtrls, Vcl.Buttons, System.Threading ;
+
+
+
+    procedure  pFtModelTarefa02Threads( pTProgressBar : TProgressBar; pTEdit : TEdit ) ;
+    function  fExecaoParametrosTfTarefa02:boolean ;
+
+
+
+implementation
+
+Uses ufTarefa2 ;
+
+
+
+
+
+
+
+
+procedure  pFtModelTarefa02Threads( pTProgressBar : TProgressBar; pTEdit : TEdit ) ;
+var
+   I : Integer ;
+
+begin
+
+
+   with( fTarefa2  ) do
+   begin
+         pTProgressBar.Visible := True;
+        I := 0;
+    for I := 1 to 100 do
+    begin
+     while pTProgressBar.Position < 100 do
+          if pTProgressBar.Position < 50 then //Se o total da barra for menor que 50
+        begin
+          pTProgressBar.Position := pTProgressBar.Position + 1; //Incrementa mais 1 ao valor total da barra
+          Sleep(50); //Tempo a ser percorrido
+        end
+      else begin //Caso o total da barra for superior a 50 a barra encherá mais rápido.
+          pTProgressBar.Position := pTProgressBar.Position + 1;
+          Sleep(5);
+      end;
+
+    end;
+
+
+   if( Trim( sMsgTarefa ) = '2' )then begin
+
+
+    Sleep(100);
+    Application.MessageBox('Tarefas 100% finalizadas com sucesso.', 'Aviso', mb_IconError + mb_Ok);
+
+    {Tarefas}
+    pTProgressBar.Visible         := False;
+    pTEdit.Text                   := '';
+    pTEdit.Text                   := '100';
+    ProgressBarFtTarefaUm.Visible := False;
+    EditFtTempoTarefa01.Text      := '';
+    EditFtTempoTarefa01.Text      := '100';
+    end;
+
+    end;
+end;
+{==============================================================================}
+
+
+
+
+
+{==============================================================================}
+function  fExecaoParametrosTfTarefa02:boolean ;
+begin
+
+  fExecaoParametrosTfTarefa02 := False;
+
+  with( fTarefa2  ) do
+  begin
+    if( Trim( EditFtTempoTarefa01.Text  ) = '')then
+    begin
+      EditFtTempoTarefa01.Color:= $00FFFFB7;
+      EditFtTempoTarefa01.SetFocus;
+
+      Application.MessageBox('Favor informar o tempo para primeira tarefa.Tente novamente obrigado', 'Aviso', mb_IconError + mb_Ok);
+      exit;
+    end;
+  end;
+
+  with( fTarefa2  ) do
+  begin
+    if( Trim( EditFtTempoTarefa02.Text  ) = '')then
+    begin
+      EditFtTempoTarefa02.Color:= $00FFFFB7;
+      EditFtTempoTarefa02.SetFocus;
+
+      Application.MessageBox('Favor informar o tempo para segunda tarefa.Tente novamente obrigado', 'Aviso', mb_IconError + mb_Ok);
+      exit;
+    end;
+  end;
+
+ fExecaoParametrosTfTarefa02 := True;
+
+end;
+{==============================================================================}
+
+end.

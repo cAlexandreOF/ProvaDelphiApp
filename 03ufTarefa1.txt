@@ -1,0 +1,335 @@
+{ ==============================================================================}
+{  */ VIEW UNIT Tela Tarefa 01                                                   }
+{ ==============================================================================}
+{ Deselvolvedor:Carlos Alexandre de Oliveira Fraga                              }
+{ e-Mail:cfraga03@yahoo.com.br                                                  }
+{ Telefone :021 994463083                                                                             }
+{ ==============================================================================}
+
+
+
+unit ufTarefa1;
+
+interface
+
+uses
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls, Vcl.ExtCtrls, Vcl.Buttons,
+  System.ImageList, Vcl.ImgList, FireDAC.Stan.Intf, FireDAC.Stan.Option,
+  FireDAC.Stan.Param, FireDAC.Stan.Error, FireDAC.DatS, FireDAC.Phys.Intf,
+  FireDAC.DApt.Intf, FireDAC.Stan.Async, FireDAC.DApt, Data.DB,
+  FireDAC.Comp.DataSet, FireDAC.Comp.Client, uspQuery;
+
+
+
+type
+  TfTarefa1 = class(TForm)
+    PanelMemo: TPanel;
+    MemoCondicoes: TMemo;
+    MemoNomeTabela: TMemo;
+    MemoNomeCampo: TMemo;
+    LabelNomeCampo: TLabel;
+    LabelNomeTabela: TLabel;
+    LabelCondicoes: TLabel;
+    BitBtnTfTCancelar: TBitBtn;
+    BitBtnTftGeraSql: TBitBtn;
+    ImageListTfTImagem: TImageList;
+    ListBoxTftNomeCampos: TListBox;
+    ListBoxTftNomeTabela: TListBox;
+    ListBoxTftCondicoes: TListBox;
+    MemoTftSqlGerado: TMemo;
+    LabelTftSqlGerado: TLabel;
+    Panel1: TPanel;
+    spQueryTfTarefa01: TspQuery;
+    ButtonTftFchar: TButton;
+    procedure FormClose(Sender: TObject; var Action: TCloseAction);
+    procedure FormCreate(Sender: TObject);
+    procedure BitBtnTfTCancelarClick(Sender: TObject);
+    procedure BitBtnTftGeraSqlClick(Sender: TObject);
+    procedure MemoNomeCampoChange(Sender: TObject);
+    procedure MemoNomeTabelaClick(Sender: TObject);
+    procedure MemoCondicoesChange(Sender: TObject);
+    procedure FormShow(Sender: TObject);
+    procedure ButtonTftFcharClick(Sender: TObject);
+    procedure MemoNomeCampoKeyPress(Sender: TObject; var Key: Char);
+    procedure MemoNomeTabelaKeyPress(Sender: TObject; var Key: Char);
+    procedure MemoCondicoesKeyPress(Sender: TObject; var Key: Char);
+
+  private
+    procedure pLimparTela;
+    procedure  pInserirStringlist ;
+    { Private declarations }
+
+  public
+    { Public declarations }
+
+
+
+  end;
+
+var
+  fTarefa1: TfTarefa1;
+
+
+
+implementation
+
+{$R *.dfm}
+uses uProvaDelphiApp , uModelViewfTarefa1  ;
+
+
+
+
+
+  {Inserir conteúdos dos MemoNomeCampo ,MemoNomeTabela e MemoCondicoes  em TStringlist}
+{==============================================================================}
+procedure  TfTarefa1.pInserirStringlist ;
+ var
+    i: Integer;
+
+begin
+
+     {Limpar TStringlist do Componente spComponentes}
+     spQueryTfTarefa01.spColunas.Clear;
+     spQueryTfTarefa01.spTabelas.Clear;
+     spQueryTfTarefa01.spCondicoes.Clear;
+
+
+     {Iserir Conteúdo dos  MemoNomeCampo ,MemoNomeTabela e MemoCondicoes  em spColunas, spCondicoes spTabelas Type TStringlist }
+
+    { Check MemoNomeCampo Iserir em spColunas}
+        i:=0  ;
+    for i:=0 to MemoNomeCampo.Lines.Count -1 do
+     begin
+        spQueryTfTarefa01.spColunas.Add( MemoNomeCampo.Lines.Strings[i] ) ;
+     end;
+
+     { Check MemoNomeTabela Iserir em spTabelas}
+         i:=0 ;
+     for i:=0 to MemoNomeTabela.Lines.Count -1 do
+     begin
+        spQueryTfTarefa01.spTabelas.Add( MemoNomeTabela.Lines.Strings[i] ) ;
+     end;
+
+     { Check MemoCondicoes Iserir em spCondicoes}
+     i:=0 ;
+     for i:=0 to MemoCondicoes.Lines.Count -1 do
+     begin
+        spQueryTfTarefa01.spCondicoes.Add( MemoCondicoes.Lines.Strings[i] ) ;
+     end;
+
+     {Gerar SQL em Componente spComponentes e disponibilizar resultado em MemoTftSqlGerado Tela TfTarefa1}
+      MemoTftSqlGerado.Lines.Clear;
+      MemoTftSqlGerado.Lines.Add( spQueryTfTarefa01.GeraSQL );
+
+
+end;
+{==============================================================================}
+
+
+
+
+
+
+
+
+{==============================================================================}
+procedure TfTarefa1.pLimparTela;
+var
+    i: integer;
+begin
+
+   { limpar Text TMemo }
+   for i := 0 to PanelMemo.ControlCount-1  do   begin
+      if PanelMemo.Controls[i]is TMemo then
+      begin
+       TMemo( PanelMemo.Controls[i]).Text := '';
+       end;end;
+
+   MemoNomeCampo.SetFocus;
+
+end;
+{==============================================================================}
+
+
+
+
+
+
+
+{==============================================================================}
+procedure TfTarefa1.BitBtnTfTCancelarClick(Sender: TObject);
+begin
+
+  {Limpar Tela e TStringlist}
+  pLimparTela;
+
+end;
+{==============================================================================}
+
+
+
+
+{==============================================================================}
+procedure TfTarefa1.BitBtnTftGeraSqlClick(Sender: TObject);
+
+begin
+
+  {Tratamento das Exeções}
+ if( not fExecaoParametros )then
+  begin
+   Exit;
+  end;
+
+  {Gerar SQL}
+  pInserirStringlist ;
+
+
+end;
+{==============================================================================}
+
+
+
+
+{==============================================================================}
+procedure TfTarefa1.ButtonTftFcharClick(Sender: TObject);
+begin
+
+ Close;
+
+end;
+
+{==============================================================================}
+
+
+
+
+
+{==============================================================================}
+procedure TfTarefa1.FormClose(Sender: TObject; var Action: TCloseAction);
+begin
+
+  {limpar memória}
+  spQueryTfTarefa01.TsListFree ;
+  Action := caFree;
+
+end;
+{==============================================================================}
+
+
+
+
+
+{==============================================================================}
+procedure TfTarefa1.FormCreate(Sender: TObject);
+begin
+
+ spQueryTfTarefa01.TsListCreate;
+
+end;
+{==============================================================================}
+
+
+
+
+
+{==============================================================================}
+procedure TfTarefa1.FormShow(Sender: TObject);
+begin
+
+
+  {Limpar Tela e TStringlist}
+  pLimparTela;
+
+end;
+
+{==============================================================================}
+
+
+
+
+
+{==============================================================================}
+procedure TfTarefa1.MemoCondicoesChange(Sender: TObject);
+begin
+
+  if( MemoCondicoes.Color <> clWhite )then
+  begin
+     MemoCondicoes.Color := clWhite;
+  end;
+
+end;
+{==============================================================================}
+
+
+
+
+{==============================================================================}
+procedure TfTarefa1.MemoCondicoesKeyPress(Sender: TObject; var Key: Char);
+begin
+  {permite apenas caracter mausculo}
+  Key := UpCase( Key );
+
+end;
+
+{==============================================================================}
+
+
+
+
+
+{==============================================================================}
+procedure TfTarefa1.MemoNomeCampoChange(Sender: TObject);
+begin
+
+  if( MemoNomeCampo.Color <> clWhite )then
+  begin
+    MemoNomeCampo.Color := clWhite;
+  end;
+
+end;
+{==============================================================================}
+
+
+
+{==============================================================================}
+procedure TfTarefa1.MemoNomeCampoKeyPress(Sender: TObject; var Key: Char);
+begin
+  {permite apenas caracter mausculo}
+  Key := UpCase( Key );
+
+end;
+
+{==============================================================================}
+
+
+
+{==============================================================================}
+procedure TfTarefa1.MemoNomeTabelaClick(Sender: TObject);
+begin
+
+  if( MemoNomeTabela.Color <> clWhite )then
+  begin
+    MemoNomeTabela.Color := clWhite;
+  end;
+
+
+end;
+{==============================================================================}
+
+
+
+{==============================================================================}
+procedure TfTarefa1.MemoNomeTabelaKeyPress(Sender: TObject; var Key: Char);
+begin
+
+  {permite apenas caracter mausculo}
+  Key := UpCase( Key );
+
+
+end;
+
+{==============================================================================}
+
+
+end.

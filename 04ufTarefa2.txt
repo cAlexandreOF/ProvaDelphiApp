@@ -1,0 +1,197 @@
+{ ==============================================================================}
+{  */ VIEW UNIT Tela Tarefa 02                                                   }
+{ ==============================================================================}
+{ Deselvolvedor:Carlos Alexandre de Oliveira Fraga                              }
+{ e-Mail:cfraga03@yahoo.com.br                                                  }
+{ Telefone :021 994463083                                                                             }
+{ ==============================================================================}
+
+
+
+
+unit ufTarefa2;
+
+interface
+
+uses
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls,
+  Vcl.ComCtrls, Vcl.Buttons, System.Threading, System.ImageList, Vcl.ImgList ;
+
+
+
+
+type
+  TfTarefa2 = class(TForm)
+    EditFtTempoTarefa01: TEdit;
+    EditFtTempoTarefa02: TEdit;
+    LabelFtTempoTarefa01: TLabel;
+    ProgressBarFtTarefaUm: TProgressBar;
+    ProgressBarFtTarefaDois: TProgressBar;
+    ButtonfTExec: TButton;
+    ImageListFtTarefa02: TImageList;
+    LabelFtTempoTarefa02: TLabel;
+    procedure FormClose(Sender: TObject; var Action: TCloseAction);
+    procedure EditFtTempoTarefa01KeyPress(Sender: TObject; var Key: Char);
+    procedure EditFtTempoTarefa02KeyPress(Sender: TObject; var Key: Char);
+    procedure FormShow(Sender: TObject);
+    procedure ButtonfTExecClick(Sender: TObject);
+    procedure EditFtTempoTarefa01Change(Sender: TObject);
+    procedure EditFtTempoTarefa02Change(Sender: TObject);
+
+  private
+    { Private declarations }
+  public
+    { Public declarations }
+
+  end;
+
+var
+   fTarefa2: TfTarefa2;
+   Task: ITask;
+   sMsgTarefa : String;
+
+implementation
+
+{$R *.dfm}
+
+uses uProvaDelphiApp , uModelViewfTarefa02 ;
+
+
+
+
+
+{==============================================================================}
+procedure TfTarefa2.EditFtTempoTarefa02Change(Sender: TObject);
+begin
+
+     if( EditFtTempoTarefa02.color <> clWindow )then
+     begin
+       EditFtTempoTarefa02.color := clWindow ;
+     end;
+
+end;
+{==============================================================================}
+
+
+
+
+{==============================================================================}
+procedure TfTarefa2.EditFtTempoTarefa02KeyPress(Sender: TObject; var Key: Char);
+begin
+if not( key in['0'..'9',#08])then
+   key:= #0;
+
+end;
+{==============================================================================}
+
+
+
+
+
+
+{==============================================================================}
+procedure TfTarefa2.ButtonfTExecClick(Sender: TObject);
+var
+
+  t : TThread ;
+begin
+
+  {Tratamento parâmetros}
+  if ( not fExecaoParametrosTfTarefa02 )then
+  begin
+     Exit;
+  end;
+
+ {Executar tarefas}
+ t:= TThread.CreateAnonymousThread(procedure
+  var
+
+    x: integer;
+
+  begin
+      sMsgTarefa := '';
+      pFtModelTarefa02Threads(ProgressBarFtTarefaUm , EditFtTempoTarefa01);
+
+      TThread.Synchronize(nil,procedure
+       begin
+        sMsgTarefa := '2';
+        pFtModelTarefa02Threads(ProgressBarFtTarefaDois , EditFtTempoTarefa02);
+      end);
+
+    end);
+    t.Start;
+
+
+
+end;
+{==============================================================================}
+
+
+
+
+
+{==============================================================================}
+procedure TfTarefa2.EditFtTempoTarefa01Change(Sender: TObject);
+begin
+
+     if( EditFtTempoTarefa01.color <> clWindow )then
+     begin
+       EditFtTempoTarefa01.color := clWindow ;
+     end;
+
+
+end;
+{==============================================================================}
+
+
+
+
+
+{==============================================================================}
+procedure TfTarefa2.EditFtTempoTarefa01KeyPress(Sender: TObject; var Key: Char);
+begin
+if not( key in['0'..'9',#08])then
+   key:= #0;
+
+end;
+{==============================================================================}
+
+
+
+
+{==============================================================================}
+procedure TfTarefa2.FormClose(Sender: TObject; var Action: TCloseAction);
+begin
+ {lIberar memória}
+ Action := caFree;
+
+end;
+{==============================================================================}
+
+
+
+
+{==============================================================================}
+procedure TfTarefa2.FormShow(Sender: TObject);
+begin
+
+  {Tarefa o1}
+  ProgressBarFtTarefaUm.Visible := False;
+  EditFtTempoTarefa01.Text      := '';
+  EditFtTempoTarefa01.Text      := '100';
+
+
+  {Tarefa o2}
+  ProgressBarFtTarefaDois.Visible:= False;
+  EditFtTempoTarefa02.Text       := '';
+  EditFtTempoTarefa02.Text       := '100';
+
+
+end;
+
+{==============================================================================}
+
+
+
+end.

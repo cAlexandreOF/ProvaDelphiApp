@@ -1,0 +1,50 @@
+{ ==============================================================================
+{   */ PDK pacote registrar componente tal: spComponentes
+{ ==============================================================================
+{ Deselvolvedor:Carlos Alexandre de Oliveira Fraga
+{ e-Mail:cfraga03@yahoo.com.br
+{ GitHub: https://github.com/CarlosAOFraga/Carlos-Alexandre-de-Oliveira-Fraga/edit/main/README.md
+{
+{ ==============================================================================
+}
+
+
+unit uspComponentesRegistro;
+
+interface
+
+uses
+   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls, System.StrUtils,
+  Vcl.ExtCtrls, System.ImageList, Vcl.ImgList, Vcl.ComCtrls,uspQuery;
+
+
+
+Type
+
+
+TButtonRegistar = class(TButton)
+
+private
+{ Private declarations }
+protected
+{ Protected declarations }
+public
+{ Public declarations }
+published
+{ Published declarations }
+end;
+
+   procedure Register;
+
+implementation
+
+
+procedure Register;
+begin
+
+   RegisterComponents('Registrar spComponentes', [TspQuery]);
+
+end;
+
+end.

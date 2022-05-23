@@ -1,0 +1,124 @@
+unit uspQuery;
+
+interface
+
+uses
+   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, FireDAC.Stan.Intf, FireDAC.Stan.Option,
+  FireDAC.Stan.Param, FireDAC.Stan.Error, FireDAC.DatS, FireDAC.Phys.Intf,
+  FireDAC.DApt.Intf, FireDAC.Stan.Async, FireDAC.DApt, Data.DB,
+  FireDAC.Comp.DataSet, FireDAC.Comp.Client, Vcl.StdCtrls;
+
+
+  type
+
+  TspQuery= class(TFDQuery)
+
+     private
+    { Private declarations }
+
+     public
+     { Public declarations }
+     sGeraSql     :  String;
+     spColunas    : TStringlist;
+     spTabelas    : TStringList;
+     spCondicoes  : TStringlist;
+
+
+     function GeraSQL : String ;
+     procedure TsListCreate;
+     procedure TsListFree;
+
+  end;
+
+
+
+implementation
+
+
+
+//==============================================================================
+procedure TspQuery.TsListCreate;
+begin
+
+   spColunas  := TStringList.Create;
+   spTabelas  := TStringList.Create;
+   spCondicoes:= TStringList.Create;
+
+end;
+//==============================================================================
+
+
+
+
+
+//==============================================================================
+procedure TspQuery.TsListFree;
+begin
+
+   spColunas.Free  ;
+   spTabelas.Free  ;
+   spCondicoes.Free;
+
+
+end;
+//==============================================================================
+
+
+
+
+
+//==============================================================================
+function TspQuery.GeraSQL :String;
+  var
+    i : Integer;
+
+begin
+
+
+    Result    := '';
+
+    i         := 0;
+    sGeraSql  := '';
+
+    {início SQL}
+    sGeraSql  := 'Select ';
+
+   {SQL nome do(s)campo(s)}
+   for i:=0 to Pred(spColunas.Count) do
+   begin
+     if( i = 0)then
+     begin
+       sGeraSql := sGeraSql + Trim(spColunas.Strings[i] ) ;
+     end
+     else
+     begin
+       sGeraSql := sGeraSql +  ',';
+       sGeraSql := sGeraSql + Trim( spColunas.Strings[i]) ;
+     end;
+   end;
+
+   {Cláusula FROM}
+   sGeraSql :=  sGeraSql + '  From ' ;
+
+   {SQL nome da tabela}
+       i:= 0;
+   for i:=0 to Pred(spTabelas.Count) do
+   begin
+     sGeraSql := sGeraSql + Trim(spTabelas.Strings[i] ) ;
+   end;
+
+   {SQL Condições}
+       i:= 0;
+   for i:=0 to Pred(spCondicoes.Count) do
+   begin
+     sGeraSql := sGeraSql + '  ' + Trim(spCondicoes.Strings[i] ) ;
+   end;
+
+   Result:=  sGeraSql;
+
+
+end;
+//==============================================================================
+
+end.

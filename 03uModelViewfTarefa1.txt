@@ -1,0 +1,109 @@
+{ ==============================================================================}
+{  */ MODEL UNIT Tela Tarefa 01                                                 }
+{ ==============================================================================}
+{ Deselvolvedor:Carlos Alexandre de Oliveira Fraga                              }
+{ e-Mail:cfraga03@yahoo.com.br                                                  }
+{ Telefone :021 994463083                                                       }
+{ ==============================================================================}
+
+
+
+
+unit uModelViewfTarefa1;
+
+
+interface
+
+uses
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls, Vcl.ExtCtrls;
+
+
+    function  fExecaoParametros:boolean ;
+
+implementation
+
+uses ufTarefa1;
+
+
+
+
+
+
+
+
+
+
+
+
+{==============================================================================}
+function  fExecaoParametros:boolean ;
+var
+   i , iCont: Integer;
+
+begin
+
+   Result := false;
+
+   with( fTarefa1 ) do
+   begin
+
+
+    {Memo Campo(s)}
+    if( Trim( MemoNomeCampo.Text  ) = '')then
+    begin
+      MemoNomeCampo.Color:= $00FFFFB7;
+      MemoNomeCampo.SetFocus;
+
+      Application.MessageBox('Favor informar o(s) nome(s) do(s) campo(s) na tabela.Tente novamente obrigado', 'Aviso', mb_IconError + mb_Ok);
+      exit;
+    end;
+
+   {Memo Tabela}
+   if( Trim( MemoNomeTabela.Text ) = '')then
+    begin
+      MemoNomeTabela.Color:= $00FFFFB7;
+      MemoNomeTabela.SetFocus;
+
+      Application.MessageBox('Favor informar o nome da tabela.Tente novamente obrigado', 'Aviso', mb_IconError + mb_Ok);
+      exit;
+    end;
+
+   {testa Memo tabela}
+       i    := 0;
+       iCont:= 1;
+
+   for i:=0 to MemoNomeTabela.Lines.Count -1 do
+   begin
+   if( iCont > 1)then
+    begin
+      MemoNomeTabela.Color:= $00FFFFB7;
+      MemoNomeTabela.SetFocus;
+
+      Application.MessageBox('É permitido informar apenas uma tabela para a geração do SQL.Tente novamente obrigado', 'Aviso', mb_IconError + mb_Ok);
+      exit;
+    end;
+    iCont := iCont + 1;
+   end;
+
+   {Memo condiçõe}
+   if( Trim( MemoCondicoes.Text ) = '')then
+   begin
+      MemoCondicoes.Color:= $00FFFFB7;
+      MemoCondicoes.SetFocus;
+
+      Application.MessageBox('Favor informar as condições para a geração do SQL.Tente novamente obrigado', 'Aviso', mb_IconError + mb_Ok);
+      exit;
+   end;
+
+    Result := True;
+
+   end;
+
+end;
+{==============================================================================}
+
+
+
+
+end.

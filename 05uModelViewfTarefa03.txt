@@ -1,0 +1,146 @@
+{ ==============================================================================}
+{  */ MODEL UNIT Tela Tarefa 03                                                 }
+{ ==============================================================================}
+{ Deselvolvedor:Carlos Alexandre de Oliveira Fraga                              }
+{ e-Mail:cfraga03@yahoo.com.br                                                  }
+{ Telefone :021 994463083                                                       }
+{ ==============================================================================}
+
+
+
+unit uModelViewfTarefa03;
+
+
+interface
+uses
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.ExtCtrls, Data.DB, Vcl.Grids,
+  Vcl.DBGrids, Vcl.StdCtrls, System.ImageList, Vcl.ImgList , Datasnap.DBClient;
+
+
+    function  fObterTotal: String;
+    function  fObterTotalDivisao: String;
+
+implementation
+
+uses ufTarefa3 , uCriarConexaoDados;
+
+
+
+ {Obter Total}
+{==============================================================================}
+function  fObterTotal: String;
+var
+      sValor : String;
+      ffloat : Double;
+
+begin
+
+     sValor := '';
+     ffloat := 0 ;
+     Result := '';
+
+     {check valor grid}
+     with( fTarefa3 )do
+     begin
+       with( ClientDataSetTemp ) do
+       begin
+         First;
+         while ( not Eof )do
+         begin
+          ffloat := ffloat + StrToFloat( copy( Trim(FieldByName('Valor').AsString), 4, 5) );
+         Next;
+         end;
+         First;
+       end;
+
+     end;
+
+     {Formtar casas decimais}
+     sValor := FloatToStr(ffloat);
+     sValor := FormatFloat('##,###,##0.00', StrToInt(sValor));
+
+     Result := sValor;
+
+end;
+
+{==============================================================================}
+
+
+
+
+ {Obter Total Divisão}
+{==============================================================================}
+function  fObterTotalDivisao: String;
+
+var
+    dValorInicio       : Double;
+    dValorProximo      : Double;
+    dValorDivisao      : Double;
+    dValorTotalDivisao : Double;
+    i                  : Integer;
+    sValor             : String;
+
+begin
+
+
+        {zerar variáveis}
+        dValorInicio       := 0 ;
+        dValorProximo      := 0 ;
+        dValorDivisao      := 0 ;
+        dValorTotalDivisao := 0 ;
+        Result             := '';
+        i                  := 0;
+        sValor             := '';
+
+        {Check Grid e Obter Total da divisão}
+        with( fTarefa3 )do
+        begin
+
+
+
+         with( ClientDataSetTemp ) do
+         begin
+
+          First;
+          while ( not Eof )do
+          begin
+
+           {zerar variáveis}
+           dValorInicio       := 0 ;
+           dValorProximo      := 0 ;
+           dValorDivisao      := 0 ;
+
+
+           if( i <> 0 )then
+           begin
+
+             {pego o primeiro registro posicionado}
+             dValorInicio       := StrToFloat( copy( Trim(FieldByName('Valor').AsString), 4, 5) ) - StrToFloat( ( '10,00')) ;
+             {pego o próximo registro posicionado conforme a projeção}
+             dValorProximo      := StrToFloat( copy( Trim(FieldByName('Valor').AsString), 4, 5) ) ;
+             {Divisão}
+             dValorDivisao      := dValorProximo / dValorInicio;
+
+             {Soma valor total da divisão}
+             dValorTotalDivisao := dValorTotalDivisao + dValorDivisao;
+
+           end;
+
+
+          Next; i:= i + 1;
+          end;
+
+         end;
+
+        end;
+
+       {Formtar casas decimais}
+       sValor := Copy( FloatToStr(dValorTotalDivisao),1,7);
+       sValor  := Format('%8.2f',[StrToFloat( sValor )]);
+       Result :=  sValor  ;
+
+end;
+{=========== ===================================================================}
+
+end.

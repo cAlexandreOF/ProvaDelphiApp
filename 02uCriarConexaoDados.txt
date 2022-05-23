@@ -1,0 +1,122 @@
+{ ==============================================================================}
+{  */ CONTROLLER CRIAR CONEXÃO DADOS                                            }
+{ ==============================================================================}
+{ Deselvolvedor:Carlos Alexandre de Oliveira Fraga                              }
+{ e-Mail:cfraga03@yahoo.com.br                                                  }
+{ Telefone :021 994463083                                                       }
+{ ==============================================================================}
+
+
+
+unit uCriarConexaoDados;
+
+interface
+uses
+Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
+Dialogs, StdCtrls, DB, Datasnap.DBClient , Grids, DBGrids;
+
+
+       procedure pCriarClientDataSetDataSource;
+       procedure pDestroiClientDataSetDataSource;
+
+ var
+
+    ClientDataSetTemp : TClientDataSet;
+    DataSourceTemp    : TDataSource;
+
+
+
+implementation
+
+uses ufTarefa3 , uModelViewfTarefa03;
+
+
+{Criar  ClientDataSet e  DataSource }
+{==============================================================================}
+procedure pCriarClientDataSetDataSource;
+  var
+          i       : Integer;
+          j       : Integer;
+     iValor       : Double;
+     sformatValor : String;
+     sValor       : String;
+
+begin
+
+
+    i      := 0;
+    j      := 0;
+    iValor := 0;
+
+  {ClientDataSet }
+  ClientDataSetTemp := TClientDataSet.Create(nil);
+  ClientDataSetTemp.Close;
+  ClientDataSetTemp.FieldDefs.Clear;
+  ClientDataSetTemp.FieldDefs.add('idProjeto'   ,ftInteger );
+  ClientDataSetTemp.FieldDefs.add('NomeProjeto',ftString,50);
+  ClientDataSetTemp.FieldDefs.add('Valor'      ,ftString,50);
+  ClientDataSetTemp.CreateDataSet;
+
+
+
+  { DataSource }
+  DataSourceTemp := TDataSource.Create(nil);
+  DataSourceTemp.DataSet := ClientDataSetTemp;
+
+  with( fTarefa3 )do
+  begin
+   DBGridFtTarefa03.DataSource := DataSourceTemp ;
+  end;
+
+ {10 registros dinamicamente de forma aleatória no Grid}
+     i            := 0;
+     j            := 1;
+     iValor       := StrToFloat('10,00');
+     sValor       := '';
+     sformatValor := '';
+     sformatValor := '10,00';
+
+ for i := 1 to 10 do
+ begin
+
+
+      {Inserir dados}
+      ClientDataSetTemp.Insert;
+      ClientDataSetTemp.FieldByName('idProjeto'  ).AsInteger := j ;
+      ClientDataSetTemp.FieldByName('NomeProjeto').AsString  := 'Projeto ' + IntToStr( j);
+      ClientDataSetTemp.FieldByName('Valor'      ).AsString  := 'R$  ' + sformatValor ;
+      ClientDataSetTemp.Post;
+
+      {Formatar casas decimais}
+      sValor      := '';
+      sformatValor:= '';
+      j           := j + 1;
+      iValor      := iValor + StrToFloat('10,00');
+      sValor      := FloatToStr(iValor);
+      sformatValor:= FormatFloat('##,###,##0.00', StrToInt(sValor));
+
+
+ end;
+ {Ordernar Campo Descrescente}
+ ClientDataSetTemp.IndexFieldNames :=  'idProjeto';
+ ClientDataSetTemp.First;
+
+
+
+
+
+
+
+end;
+{==============================================================================}
+
+procedure pDestroiClientDataSetDataSource;
+begin
+
+ ClientDataSetTemp.Close;
+ FreeAndNil(ClientDataSetTemp);
+ FreeAndNil(DataSourceTemp);
+
+end;
+
+end.
